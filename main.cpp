@@ -28,9 +28,9 @@ int main()
         {
             unsigned long long *tamano = new unsigned long long;
             string texto,nombre="natural.txt";
-            lecturam2(&texto,nombre,tamano);
+            texto=lecturam2(nombre,tamano);
 
-            texto.pop_back();
+            //texto.pop_back();
             //*tamano=texto.length();
 
             cout<<endl<<texto<<endl<<endl;

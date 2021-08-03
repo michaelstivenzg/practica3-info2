@@ -3,7 +3,7 @@
 
 void m2_codificacion(unsigned long long int tamano ,unsigned long int semilla,string nombre,string texto)
 {
-    texto=bin_m2(tamano,texto);
+
     cout<<endl<<texto<<endl<<endl<<endl;
     texto=metodo2(texto,tamano,semilla,0);
     cout<<endl<<texto<<endl;
@@ -17,9 +17,8 @@ void m2_codificacion(unsigned long long int tamano ,unsigned long int semilla,st
 string m2_decodificacion(unsigned long long int *tamano ,unsigned long int semilla,string nombre)
 {
     string texto;
-    lecturam2(&texto,nombre,tamano);
-    texto.pop_back();
-    texto=bin_m2(*tamano,texto);
+    texto=lecturam2(nombre,tamano);
+    //texto.pop_back();
     cout<<endl<<texto<<endl<<endl<<endl;
     texto=r_metodo2(texto,*tamano,semilla,0);
     cout<<endl<<texto<<endl;
@@ -30,7 +29,7 @@ string m2_decodificacion(unsigned long long int *tamano ,unsigned long int semil
 }
 
 
-void lecturam2(string *datos,string nombre,unsigned long long *tamano )
+string lecturam2(string nombre,unsigned long long *tamano )
 {
     fstream archivo;
     archivo.open(nombre, fstream::in | fstream::binary | fstream::ate);
@@ -40,7 +39,7 @@ void lecturam2(string *datos,string nombre,unsigned long long *tamano )
     if (!archivo.is_open())
     {
         cout <<"Archivo no encontrado"<< endl;
-        return;
+        return nullptr;
     }
     /*string *pala= new string;
        while (getline(archivo,*pala,'\n'))
@@ -49,13 +48,16 @@ void lecturam2(string *datos,string nombre,unsigned long long *tamano )
        }
        delete pala;
         */
-    for(unsigned long long int i=0 ; i<=*tamano ;i++)
+    string datos;
+    for(unsigned long long int i=0 ; i<*tamano ;i++)
     {    int letra=archivo.get();
+        string binario;
         cout<<endl<<letra<<endl;
-        cout<<endl<<char(letra)<<endl;
-        *datos=*datos+char(letra);
+        binario=bin_m2(letra);
+        datos=datos+binario;
 
     }
+    return datos;
 }
 
 
@@ -63,17 +65,16 @@ void lecturam2(string *datos,string nombre,unsigned long long *tamano )
 
 
 
-string bin_m2(unsigned long long int tamano, string escrito)
+string bin_m2(unsigned int ascii )
 {
 
     string bits, codificado ;
     string prueba;
-    unsigned int ascii;
-    for (unsigned long int i=0; i<tamano;i++)
-    {
-        //prueba = ();
 
-        ascii= unsigned( int (escrito[i]));
+
+
+
+
         bits="";
         while(ascii > 0)
         {
@@ -93,7 +94,7 @@ string bin_m2(unsigned long long int tamano, string escrito)
             bits='0'+ bits;
         }
         codificado= codificado+bits;
-    }
+
 
     return codificado;
 
