@@ -19,7 +19,7 @@ int main()
             tam(nombre_E,&tamano);
 
             char *texto=new char[(tamano)*8];
-            texto=lecturaM1(nombre_E,tamano);
+            lecturaM1(nombre_E,tamano,texto);
             m1_codificacion(tamano,semilla,nombre_S,texto);
             delete[] texto;
 
@@ -52,10 +52,11 @@ int main()
         {
             unsigned long long *tamano = new unsigned long long;
             char nombre_E[]="natural.txt",nombre_S[]="codificado.dat";
-            tam(nombre_E,tamano);
+            tam(nombre_S,tamano);
             char *texto=new char[*tamano*8];
-            m1_codificacion(*tamano,semilla,nombre_E,texto);
-            escribirM1(texto,nombre_S);
+            texto=m1_decodificacion(*tamano,semilla,nombre_S,texto);
+            escribirM1(texto,nombre_E,*tamano);
+            cout<<endl<<texto<<endl;
             delete[] texto;
             delete tamano;
 

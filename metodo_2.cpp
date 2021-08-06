@@ -61,10 +61,6 @@ string lecturam2(string nombre,unsigned long long *tamano )
 }
 
 
-
-
-
-
 string bin_m2(unsigned int ascii )
 {
 

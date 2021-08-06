@@ -30,7 +30,7 @@ void implementacion(unsigned long int* semilla,unsigned short int* metodo)
         cout<<endl<<" selecciona metodo de codificacion \n "
                 "1.primer metodo \n 2.segundo metodo  "<<endl;cin>>*metodo;
 
-        if(*metodo<=2 and *metodo>0)
+        if(*metodo<=3 and *metodo>0)
         {
             break;
         }
@@ -39,25 +39,26 @@ void implementacion(unsigned long int* semilla,unsigned short int* metodo)
 
 }
 
-void m1_codificacion(unsigned long long int tamano ,unsigned long int semilla,char* nombre,char* texto)//cuandon es arreglo se pasa con puntero
+void m1_codificacion(unsigned long long int tamano ,unsigned long int semilla,char* nombre,char* texto)
 {
-//tamaño la cantidad de elementos que hay un arreglo, semilla los n digitos o los bits, nombre es el nombre del texto, texto es el todo las conersiones
-    cout<<endl<<texto<<endl;
-    texto=binarioM1(tamano,texto);
+
+
     cout<<endl<<texto<<endl;
     metodo1(texto,tamano,semilla,0,0,0);
     cout<<endl<<texto<<endl;
     texto=traduccionM1(tamano,texto);
     cout<<endl<<texto<<endl;
-    escribirM1(texto,nombre);
+    escribirM1(texto,nombre,tamano);
 }
-void m1_decodificacion(unsigned long long int tamano ,unsigned long int semilla,char *nombre,char *texto)
+char* m1_decodificacion(unsigned long long int tamano ,unsigned long int semilla,char *nombre,char *texto)
 {
-    texto=lecturaM1(nombre,tamano);
+    lecturaM1(nombre,tamano,texto);
     cout<<endl<<texto<<endl;
-    texto=binarioM1(tamano,texto);
+
     r_metodo1(texto,tamano,semilla,0,0,0);
-    cout<<endl<<texto<<endl;
+    texto=traduccionM1(tamano,texto);
+    return texto;
+
 }
 void tam(char* nombre ,unsigned long long *tamano)
 {
@@ -66,44 +67,39 @@ void tam(char* nombre ,unsigned long long *tamano)
     archivo.close();
 }
 
-char* lecturaM1(char* nombre,unsigned long long tamano)
+void lecturaM1(char* nombre,unsigned long long tamano,char * datos)
 {
 
-    fstream archivo(nombre, fstream::in);
+    fstream archivo;
+            archivo.open(nombre, fstream::in );
 
-    char *datos=new char [tamano];
-    for(unsigned long long int i=0 ; i<tamano ;i++)
+    for(unsigned long long int i=0, posicion=0 ; i<tamano ;i++)
     {    int letra=archivo.get();
-        datos[i]=char(letra);
+        cout<<endl<<datos<<endl;
+         binarioM1(&posicion,letra,datos);
     }
     archivo.close();
-    return datos;
-    delete[] datos;
 }
 
-//profe si ve esta parte del codigo,
-//me puede decir que es lo que esta mal
-//porque no me quiere crear  el archivo de texto
-void escribirM1 ( char *datos, char *nombre)
+
+void escribirM1 ( char *datos, char *nombre, unsigned long long tamano)
 {
 
-    fstream text(nombre, fstream::out  );
-    text.write( datos,4);
+    fstream text(nombre, fstream::out  |fstream::binary);
+    text.write( datos,tamano);
     //text<< datos;
     text.close();
 }
 
 
 
-char *binarioM1(unsigned long long int tamano, char *escrito)
+void binarioM1(unsigned long long int* posicion, unsigned ascii,char* codificado)
 {
-    char bits[8], *codificado= new char [8*tamano];
-    unsigned char prueba;
+    char bits[8];
+
     int contador;
-    for (unsigned int i=0, ascii; i < tamano;i++)
-    {
-        prueba=unsigned(escrito[i]);
-        ascii= int ( prueba);
+
+
         contador=7;
         while (ascii > 0)
         {
@@ -115,24 +111,20 @@ char *binarioM1(unsigned long long int tamano, char *escrito)
             ascii = (int) ascii/2;
             contador--;
         }
-
-        for (int e=0 ; e<8; e++ )
+        unsigned long long posi=*posicion;
+        for (int e=0 ; e<8; e++, posi++ )
         {
             if (e <= contador)
             {
-                codificado[(8*i)+e]= '0';
+                codificado[posi]= '0';
             }
             else
             {
-                codificado[(8*i)+e]=bits[e];
+                codificado[posi]=bits[e];
             }
 
         }
-
-    }
-
-    return codificado;
-    delete [] codificado;
+        *posicion=posi;
 }
 
 
@@ -149,7 +141,7 @@ char * traduccionM1(unsigned long long int tamano, char *bina)
         {
             letra=letra+(pow((int(bina[i])-48)*2,a));
         }
-        if(bina[i]==0) escribir[e]= char(letra-1);
+        if(bina[i-1]=='0') escribir[e]= char(letra-1);
         else escribir[e]= char(letra);
     }
     return escribir;
@@ -160,7 +152,7 @@ char * traduccionM1(unsigned long long int tamano, char *bina)
 void metodo1(char* binario,unsigned long long tamano,unsigned long semilla,unsigned long ceros,unsigned long unos,unsigned long long posicion)
 {
     int8_t aplicacion,regla;
-    for(unsigned long int i = 0;i<((tamano*8)/semilla) and posicion< tamano*8 ;i++)
+    for(unsigned long int i = 0;i<(tamano*8)/semilla and posicion < tamano*8 ;i++)
     {
         sentencia(ceros,unos,&regla);
         aplicacion=0;
@@ -182,7 +174,7 @@ void metodo1(char* binario,unsigned long long tamano,unsigned long semilla,unsig
             else aplicacion++;
         }
     }
-    if((tamano*8)%semilla != 0)
+    if((tamano*8-posicion)%semilla != 0)
     {
         unsigned long int sobras =(tamano*8)-posicion;
         metodo1(binario,tamano,sobras,ceros,unos,posicion);
@@ -217,7 +209,7 @@ void r_metodo1(char* binario,unsigned long long tamano,unsigned long semilla,uns
         ceros= semilla-unos;
     }
 
-    if(tamano*8%semilla != 0)
+    if((tamano*8-posicion)%semilla != 0)
     {
         unsigned long int sobras =(tamano*8)-posicion;
         r_metodo1(binario,tamano,sobras,ceros,unos,posicion);

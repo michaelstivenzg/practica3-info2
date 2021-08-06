@@ -11,7 +11,7 @@
 
 
 
-#include "metodo_1.h"
+
 
 
 
@@ -23,15 +23,15 @@ void implementacion(unsigned long int*,unsigned short int*);
 
 //metodo I
 void m1_codificacion(unsigned long long int  ,unsigned long int ,char* ,char* );
-void m1_decodificacion(unsigned long long int ,unsigned long int ,char *,char *);
+char* m1_decodificacion(unsigned long long int ,unsigned long int ,char *,char *);
 void tam(char* ,unsigned long long *);
-char* lecturaM1(char*,unsigned long long );
+void lecturaM1(char*,unsigned long long,char* );
 char *traduccionM1(unsigned long long, char *);
-char* binarioM1(unsigned long long,char *);
+void binarioM1(unsigned long long int* , unsigned ,char*);
 void metodo1(char* ,unsigned long long ,unsigned long ,unsigned long ,unsigned long ,unsigned long long );
 void r_metodo1(char* ,unsigned long long ,unsigned long ,unsigned long ,unsigned long ,unsigned long long );
 void sentencia(unsigned long,unsigned long,int8_t*);
-void escribirM1 (char *,char *);
+void escribirM1 (char *,char *, unsigned long long);
 //metodo II
 
 void m2_codificacion(unsigned long long int ,unsigned long int,string,string);
